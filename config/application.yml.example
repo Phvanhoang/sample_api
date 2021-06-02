@@ -1,0 +1,1 @@
+API_SECURE_KEY: "" # any secret key using for encode auth token of api
