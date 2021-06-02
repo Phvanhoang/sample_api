@@ -1,0 +1,20 @@
+user:
+  name:
+    max_length: 50
+  email:
+    max_length: 100
+    regex: !ruby/regexp /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
+  password:
+    min_length: 6
+  gravatar:
+    size: 80
+reset_password:
+  time_expired: 2
+micropost:
+  content:
+    max_length: 140
+  image:
+    size_lt: 5
+    hsize_limit: 200
+    wsize_limit: 200
+  page: 10
