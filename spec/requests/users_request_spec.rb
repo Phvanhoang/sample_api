@@ -8,6 +8,16 @@ RSpec.shared_examples "create" do |attribute, invalid_user|
   end
 end
 
+RSpec.shared_examples "update" do |attribute, invalid_user|
+  it "has status unprocessable_entity when invalid #{attribute}" do
+    invalid_user["current_password"] = "123456"
+    patch user_path(user), params: {user: invalid_user.except(:auth_token)}, headers: headers
+
+    expect(response).to have_http_status :unprocessable_entity
+    expect(response.body).to include assigns(:user).errors.to_json
+  end
+end
+
 RSpec.describe "Users", type: :request do
   describe "POST #create" do
     context "with invalid user" do
@@ -24,6 +34,39 @@ RSpec.describe "Users", type: :request do
 
         expect(response).to have_http_status :created
         expect(response.body).to include I18n.t("users.created")
+      end
+    end
+  end
+
+  describe "PATCH #update" do
+    let!(:user){ create(:user) }
+    let!(:headers) { {"AUTH-TOKEN": user.generate_new_encoded_token} }
+
+    context "with invalid user" do
+      include_examples "update", :name, FactoryBot.attributes_for(:user_with_invalid_name)
+      include_examples "update", :email, FactoryBot.attributes_for(:user_with_invalid_email)
+      include_examples "update", :password, FactoryBot.attributes_for(:user_with_invalid_password)
+      include_examples "update", :password_confirmation,
+                       FactoryBot.attributes_for(:user_with_wrong_password_confirmation)
+    end
+
+    context "with valid user" do
+      it "has status ok" do
+        user_attributes = attributes_for :user
+        user_attributes["current_password"] = "123456"
+        patch user_path(user), params: {user: user_attributes.except(:auth_token)}, headers: headers
+
+        expect(response).to have_http_status :ok
+        expect(response.body).to include I18n.t("users.updated")
+      end
+
+      it "has status unprocessable_entity when wrong password" do
+        user_attributes = attributes_for :user
+        user_attributes["current_password"] = "12345"
+        patch user_path(user), params: {user: user_attributes.except(:auth_token)}, headers: headers
+
+        expect(response).to have_http_status :unprocessable_entity
+        expect(response.body).to include I18n.t("users.wrong_password")
       end
     end
   end
