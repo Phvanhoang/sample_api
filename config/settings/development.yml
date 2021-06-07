@@ -1,5 +1,6 @@
 algorithm: HS256
 expire: 2
+page: 20
 user:
   name:
     max_length: 50

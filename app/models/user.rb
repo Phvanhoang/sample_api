@@ -17,12 +17,21 @@ class User < ApplicationRecord
             length: {maximum: Settings.user.email.max_length},
             format: {with: Settings.user.email.regex}
   validates :password, presence: true,
-            length: {minimum: Settings.user.password.min_length}
+            length: {minimum: Settings.user.password.min_length},
+            allow_nil: true
 
   def generate_new_encoded_token
     payload = {auth_token: auth_token,
                exp: Time.now.to_i + Settings.expire.weeks}
     JWT.encode payload, ENV["API_SECURE_KEY"], Settings.algorithm
+  end
+
+  def follow other_user
+    following << other_user
+  end
+
+  def unfollow other_user
+    following.delete other_user
   end
 
   private
