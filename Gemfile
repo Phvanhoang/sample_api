@@ -7,6 +7,7 @@ gem "active_model_serializers", "~> 0.10.0"
 gem "active_storage_validations", "0.8.2"
 gem "bcrypt", "3.1.13"
 gem "bootsnap", ">= 1.4.4", require: false
+gem "cancancan"
 gem "config"
 gem "faker", "2.1.2"
 gem "figaro"
@@ -18,6 +19,7 @@ gem "mysql2", "~> 0.5"
 gem "puma", "~> 5.0"
 gem "rails", "~> 6.1.3"
 gem "rails-i18n"
+gem "will_paginate", "3.1.8"
 
 group :development, :test do
   gem "byebug", platforms: %i(mri mingw x64_mingw)
