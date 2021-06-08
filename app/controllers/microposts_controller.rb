@@ -8,6 +8,15 @@ class MicropostsController < ApplicationController
     render json: {messages: I18n.t("microposts.created")}, status: :created
   end
 
+  def destroy
+    @micropost.destroy!
+    render json: {success: true}, status: :ok
+  rescue ActiveRecord::RecordNotDestroyed
+    render json: {success: false,
+                  errors: I18n.t("microposts.delete_fail", id: @micropost.id)},
+           status: :internal_server_error
+  end
+
   private
 
   def micropost_params

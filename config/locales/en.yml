@@ -9,6 +9,7 @@ en:
     created: User was created
     updated: User was updated
     wrong_password: Wrong password
-    delete_fail: There wass an error while deleting user with id %{id}.
+    delete_fail: There was an error while deleting user with id %{id}.
   microposts:
     created: Micropost was created
+    delete_fail: There was an error while deleting micropost with id %{id}.
