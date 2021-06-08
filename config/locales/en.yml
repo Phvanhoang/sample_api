@@ -10,3 +10,5 @@ en:
     updated: User was updated
     wrong_password: Wrong password
     delete_fail: There wass an error while deleting user with id %{id}.
+  microposts:
+    created: Micropost was created
