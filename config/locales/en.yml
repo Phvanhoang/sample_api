@@ -13,3 +13,7 @@ en:
   microposts:
     created: Micropost was created
     delete_fail: There was an error while deleting micropost with id %{id}.
+  relationships:
+    created: Relationship was created
+    user_not_found: User was not found
+    followed_user_error: Followed the user
