@@ -3,6 +3,15 @@ class UsersController < ApplicationController
   load_and_authorize_resource
   before_action :correct_password, only: :update
 
+  def index
+    @paged_users = @users.newest.paginate(page: params[:page])
+                         .per_page Settings.page
+    @serial_users = ActiveModel::Serializer::CollectionSerializer
+                    .new(@paged_users, serializer: UserSerializer)
+    render json: {users: @serial_users, count: @serial_users.count,
+                  total_pages: @paged_users.total_pages}, status: :ok
+  end
+
   def create
     @user = User.new user_params
     if @user.save
