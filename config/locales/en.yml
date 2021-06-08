@@ -3,3 +3,9 @@ en:
   sessions:
     logged_in: Logged in
     invalid: Invalid email or password
+  unauthorized:
+    message: You are not authorized
+  users:
+    created: User was created
+    updated: User was updated
+    wrong_password: Wrong password
