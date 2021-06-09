@@ -19,6 +19,17 @@ RSpec.shared_examples "update" do |attribute, invalid_user|
 end
 
 RSpec.describe "Users", type: :request do
+  describe "GET #index" do
+    let!(:user){ create(:user_admin) }
+    let!(:headers) { {"AUTH-TOKEN": user.generate_new_encoded_token} }
+
+    it "get all users list" do
+      get users_path, headers: headers
+      expect(response).to have_http_status :ok
+      expect(JSON.parse(response.body)["count"]).to eql 1
+    end
+  end
+
   describe "POST #create" do
     context "with invalid user" do
       include_examples "create", :name, FactoryBot.attributes_for(:user_with_invalid_name)

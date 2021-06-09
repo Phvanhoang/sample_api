@@ -19,6 +19,7 @@ class User < ApplicationRecord
   validates :password, presence: true,
             length: {minimum: Settings.user.password.min_length},
             allow_nil: true
+  scope :newest, ->{order created_at: :desc}
 
   def generate_new_encoded_token
     payload = {auth_token: auth_token,
