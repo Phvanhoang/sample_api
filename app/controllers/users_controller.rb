@@ -34,6 +34,15 @@ class UsersController < ApplicationController
     end
   end
 
+  def destroy
+    @user.destroy!
+    render json: {success: true}, status: :ok
+  rescue ActiveRecord::RecordNotDestroyed
+    render json: {success: false,
+                  errors: I18n.t("users.delete_fail", id: @user.id)},
+           status: :internal_server_error
+  end
+
   private
 
   def user_params

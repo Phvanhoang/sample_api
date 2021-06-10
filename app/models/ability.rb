@@ -9,6 +9,7 @@ class Ability
 
     if user.admin
       can :manage, :all
+      cannot :destroy, User, id: user.id
       cannot [:create, :delete], Relationship
     else
       can :read, User

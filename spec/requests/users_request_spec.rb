@@ -104,4 +104,44 @@ RSpec.describe "Users", type: :request do
       end
     end
   end
+
+  describe "DELETE #destroy" do
+    let(:user){ create(:user_admin) }
+    let(:headers) { {"AUTH-TOKEN": user.generate_new_encoded_token} }
+
+    it "has status unauthorized when invalid token" do
+      get user_path(user)
+      expect(response).to have_http_status :unauthorized
+      expect(response.body).to include I18n.t(".invalid_token")
+    end
+
+    it "has status not_found when user not found" do
+      get user_path(-1), headers: headers
+      expect(response).to have_http_status :not_found
+      expect(response.body).to include "Couldn't find User with 'id'=-1"
+    end
+
+    it "has status unauthorized when user is not admin" do
+      user = create(:user)
+      headers = {"AUTH-TOKEN": user.generate_new_encoded_token}
+      delete user_path(user), headers: headers
+      expect(response).to have_http_status :unauthorized
+      expect(response.body).to include I18n.t("unauthorized.message")
+    end
+
+    it "has status no_content when delete success" do
+      other_user = create :user
+      delete user_path(other_user), headers: headers
+      expect(response).to have_http_status :ok
+      expect(JSON.parse(response.body)["success"]).to eql true
+    end
+
+    it "has status internal_server_error when delete fail" do
+      allow_any_instance_of(User).to receive(:destroy!).and_raise ActiveRecord::RecordNotDestroyed
+      other_user = create :user
+      delete user_path(other_user), headers: headers
+      expect(response).to have_http_status :internal_server_error
+      expect(JSON.parse(response.body)["success"]).to eql false
+    end
+  end
 end
