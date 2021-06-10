@@ -12,6 +12,10 @@ class UsersController < ApplicationController
                   total_pages: @paged_users.total_pages}, status: :ok
   end
 
+  def show
+    render json: {user: UserSerializer.new(@user)}, status: :ok
+  end
+
   def create
     @user = User.new user_params
     if @user.save

@@ -30,6 +30,29 @@ RSpec.describe "Users", type: :request do
     end
   end
 
+  describe "GET #show" do
+    let(:user){ create(:user_with_microposts) }
+    let(:headers) { {"AUTH-TOKEN": user.generate_new_encoded_token} }
+
+    it "has status unauthorized when invalid token" do
+      get user_path(user)
+      expect(response).to have_http_status :unauthorized
+      expect(response.body).to include I18n.t(".invalid_token")
+    end
+
+    it "has status not_found when user not found" do
+      get user_path(-1), headers: headers
+      expect(response).to have_http_status :not_found
+      expect(response.body).to include "Couldn't find User with 'id'=-1"
+    end
+
+    it "has status ok when get user success" do
+      get user_path(user), headers: headers
+      expect(response).to have_http_status :ok
+      expect(assigns(:user)).to eql user
+    end
+  end
+
   describe "POST #create" do
     context "with invalid user" do
       include_examples "create", :name, FactoryBot.attributes_for(:user_with_invalid_name)
