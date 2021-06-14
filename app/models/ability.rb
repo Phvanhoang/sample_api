@@ -10,14 +10,14 @@ class Ability
     if user.admin
       can :manage, :all
       cannot :destroy, User, id: user.id
-      cannot [:create, :delete], Relationship
+      cannot :destroy, Relationship
     else
       can :read, User
       can :update, User, id: user.id
       can :manage, Micropost, user_id: user.id
       can :read, Micropost
       can :create, Relationship
-      can :delete, Relationship, follower_id: user.id
+      can :destroy, Relationship, follower_id: user.id
     end
   end
 end
